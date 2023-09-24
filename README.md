@@ -7,7 +7,9 @@ pip install recursion
 <h3> doc: <h3>
 
 
-# Use case:
+Use case:
+
+<code>
 
 @recursive(1)
 def factorial(res, n):
@@ -20,8 +22,11 @@ print(factorial(3))
 print(factorial(4))
 print(factorial(5))
 
+</code>
 
-# Bad use case 1:
+Bad use case 1:
+
+<code>
 
 @recursive(1)
 def bad_use_case(res, a, b, n):
@@ -34,16 +39,19 @@ def bad_use_case(res, a, b, n):
 print(bad_use_case(6, 9, 3))
 print(bad_use_case(3, 5, 6))
 
-
-# The reason fo that is that actually this library is not necessary in these situations.
-# To know how we can use this library, follow this single step: 
-# "Instead of returning the function, use Continue like the factorial example."
-# Whenever you use calling the function multiple time just before returning anything,
-# you don't need this library(unless there is somewhere else in the function that returns only itself).
+</code>
 
 
-# Bad use case 2:
+ The reason fo that is that actually this library is not necessary in these situations.
+ To know how we can use this library, follow this single step: 
+ "Instead of returning the function, use Continue like the factorial example."
+ Whenever you use calling the function multiple time just before returning anything,
+ you don't need this library(unless there is somewhere else in the function that returns only itself).
 
+
+ Bad use case 2:
+
+<code>
 
 class Node:
     def __init__(self, left, right, content: str):
@@ -97,8 +105,9 @@ def buildTree(content: [str]):
     if len(nodes) % 2 == 1:
         nodes.append(nodes[-1].copy())
     return buildTree_rec(nodes)
-    
 
-# Like we discussed, calling the function multiple time just before returning anything means this library is useless.
-# This example is even worse. we even didn't use res at all!  
+</code>
+
+Like we discussed, calling the function multiple time just before returning anything means this library is useless.
+This example is even worse. we even didn't use res at all!  
 
