@@ -17,7 +17,7 @@ class Unset:
     pass
 
 
-def recursive(res):
+def recursive(res=Unset()):
     def itself_now(*args, **kwargs):
         return itself(res, *args, **kwargs)
 
@@ -80,6 +80,13 @@ print(bad_use_case(3, 5, 6))
 
 # Bad use case 2:
 
+# A merkle tree implementation
+import hashlib
+
+
+def str_to_hash(content) -> str:
+    return hashlib.sha256(content.encode('utf-8')).hexdigest()
+
 
 class Node:
     def __init__(self, left, right, content: str):
@@ -93,8 +100,9 @@ class Node:
 
     def copy(self):
         return Node(self.left, self.right, self.content)
-        
 
+
+class MerkleTree:
     def __init__(self, content: [str]):
         nodes = [Node(None, None, i) for i in content]
         if len(nodes) % 2 == 1:
@@ -104,7 +112,8 @@ class Node:
     def getRoot(self):
         return self.root
 
-    def buildTree(self, content: ['Node']) -> 'Node':
+    @recursive()
+    def buildTree(self, content: [Node]) -> Node:
         if len(content) % 2 == 1:
             content.append(content[-1].copy())
         if len(content) == 2:
@@ -113,26 +122,27 @@ class Node:
         left = self.buildTree(content[:half])
         right = self.buildTree(content[half:])
         return Node(left, right, left.content + right.content)
-        
+
+    def __str__(self) -> str:
+        return self.root.content
+
+    def print(self):
+        self.printHelper(self.root)
+
+    def printHelper(self, node: Node):
+        print(node)
+        if node.left is None:
+            return
+        self.printHelper(node.left)
+        self.printHelper(node.right)
 
 
-@recursive(Unset())
-def buildTree_rec(content: [Node]) -> Node:
-    if len(content) % 2 == 1:
-        content.append(content[-1].copy())
-    if len(content) == 2:
-        return Node(content[0], content[1], content[0].content + content[1].content)
-    half = len(content) // 2
-    left = buildTree_rec(content[:half])
-    right = buildTree_rec(content[half:])
-    return Node(left, right, left.content + right.content)
 
+content = input().split(" ")
+tree = MerkleTree(content)
+tree.print()
+print(tree.getRoot().hash)
 
-def buildTree(content: [str]):
-    nodes = [Node(None, None, i) for i in content]
-    if len(nodes) % 2 == 1:
-        nodes.append(nodes[-1].copy())
-    return buildTree_rec(nodes)
     
 
 # Like we discussed, calling the function multiple time just before returning anything means this library is useless.
