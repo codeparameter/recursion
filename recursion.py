@@ -18,10 +18,10 @@ class Unset:
 
 
 def recursive(res=Unset()):
-    def itself_now(*args, **kwargs):
+    def itself_set(*args, **kwargs):
         return itself(res, *args, **kwargs)
 
-    def itself_later(*args, **kwargs):
+    def itself_unset(*args, **kwargs):
         return itself(*args, **kwargs)
 
     def inner(itself_fn):
@@ -39,7 +39,7 @@ def recursive(res=Unset()):
 
         return wrapper
 
-    return inner(itself_later) if isinstance(res, Unset) else inner(itself_now)
+    return inner(itself_unset) if isinstance(res, Unset) else inner(itself_set)
 
 
 """
@@ -143,7 +143,7 @@ tree = MerkleTree(content)
 tree.print()
 print(tree.getRoot().hash)
 
-    
+
 
 # Like we discussed, calling the function multiple time just before returning anything means this library is useless.
 
