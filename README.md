@@ -3,9 +3,7 @@
 <h3> install: <h3>
 
 <pre><code>
-
 pip install recursion
-
 </code></pre>
 
 <h3> doc: <h3>
@@ -13,9 +11,7 @@ pip install recursion
 
 <h5>Use case:</h5>
 
-<pre>
-<code>
-
+<pre><code>
 @recursive(1)
 def factorial(res, n):
     if n == 1:
@@ -26,15 +22,11 @@ def factorial(res, n):
 print(factorial(3))
 print(factorial(4))
 print(factorial(5))
-
-</code>
-</pre>
+</code></pre>
 
 <h5>Bad use case 1:</h5>
 
-<pre>
-<code>
-
+<pre><code>
 @recursive(1)
 def bad_use_case(res, a, b, n):
     if n == 1:
@@ -45,9 +37,7 @@ def bad_use_case(res, a, b, n):
 
 print(bad_use_case(6, 9, 3))
 print(bad_use_case(3, 5, 6))
-
-</code>
-</pre>
+</code></pre>
 
 <p>
 The reason fo that is that actually this library is not necessary in these situations.
@@ -59,9 +49,7 @@ you don't need this library(unless there is somewhere else in the function that 
 
 <h5>Bad use case 2:</h5>
 
-<pre>
-<code>
-
+<pre><code>
 class Node:
     def __init__(self, left, right, content: str):
         self.left = left
@@ -114,9 +102,7 @@ def buildTree(content: [str]):
     if len(nodes) % 2 == 1:
         nodes.append(nodes[-1].copy())
     return buildTree_rec(nodes)
-
-</code>
-</pre>
+</code></pre>
 
 <p>
 Like we discussed, calling the function multiple time just before returning anything means this library is useless.
