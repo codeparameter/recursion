@@ -13,24 +13,33 @@ class Continue:
         return iter(self.out)
 
 
+class Unset:
+    pass
+
+
 def recursive(res):
-    def wrapper(fn):
-        def calc(*args, **kwargs):
-            inp = itself(res, *args, **kwargs)
-            while True:
-                out = fn(*inp)
-                if isinstance(out, Continue):
-                    inp = out
-                else:
-                    return out
+    def itself_now(*args, **kwargs):
+        return itself(res, *args, **kwargs)
+    def itself_later():
+        return itself(*args, **kwargs)
+    def inner(itself_fn):
+        def wrapper(fn):
+            def calc(*args, **kwargs):
+                inp = itself_fn(*args, **kwargs)
+                while True:
+                    out = fn(*inp)
+                    if isinstance(out, Continue):
+                        inp = out
+                    else:
+                        return out
 
-        return calc
+            return calc
+        return wrapper
+    return inner(itself_later) if isinstance(res, Unset) else inner(itself_now)
 
-    return wrapper
 
 
 """
-
 # Use case:
 
 @recursive(1)
@@ -92,7 +101,7 @@ class Node:
     def getRoot(self):
         return self.root
 
-    def buildTree(self, content: [Node]) -> Node:
+    def buildTree(self, content: ['Node']) -> 'Node':
         if len(content) % 2 == 1:
             content.append(content[-1].copy())
         if len(content) == 2:
@@ -104,8 +113,8 @@ class Node:
         
 
 
-@recursion(None)
-def buildTree_rec(res, content: [Node]) -> Node:
+@recursive(Unset())
+def buildTree_rec(content: [Node]) -> Node:
     if len(content) % 2 == 1:
         content.append(content[-1].copy())
     if len(content) == 2:
@@ -124,6 +133,5 @@ def buildTree(content: [str]):
     
 
 # Like we discussed, calling the function multiple time just before returning anything means this library is useless.
-# This example is even worse. we even didn't use res at all!  
 
 """
