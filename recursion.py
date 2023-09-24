@@ -1,11 +1,35 @@
-<h1> Python Recursion Package </h1>
+def itself(*args, **kwargs):
+    out = list(args)
+    out += [v for v in kwargs.values()]
+    return out
 
-<h3> install: <h3>
 
-pip install recursion
+class Continue:
 
-<h3> doc: <h3>
+    def __init__(self, *args, **kwargs):
+        self.out = itself(*args, **kwargs)
 
+    def __iter__(self):
+        return iter(self.out)
+
+
+def recursive(res):
+    def wrapper(fn):
+        def calc(*args, **kwargs):
+            inp = itself(res, *args, **kwargs)
+            while True:
+                out = fn(*inp)
+                if isinstance(out, Continue):
+                    inp = out
+                else:
+                    return out
+
+        return calc
+
+    return wrapper
+
+
+"""
 
 # Use case:
 
@@ -102,3 +126,4 @@ def buildTree(content: [str]):
 # Like we discussed, calling the function multiple time just before returning anything means this library is useless.
 # This example is even worse. we even didn't use res at all!  
 
+"""
