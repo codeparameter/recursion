@@ -20,8 +20,10 @@ class Unset:
 def recursive(res):
     def itself_now(*args, **kwargs):
         return itself(res, *args, **kwargs)
-    def itself_later():
+
+    def itself_later(*args, **kwargs):
         return itself(*args, **kwargs)
+
     def inner(itself_fn):
         def wrapper(fn):
             def calc(*args, **kwargs):
@@ -34,9 +36,10 @@ def recursive(res):
                         return out
 
             return calc
-        return wrapper
-    return inner(itself_later) if isinstance(res, Unset) else inner(itself_now)
 
+        return wrapper
+
+    return inner(itself_later) if isinstance(res, Unset) else inner(itself_now)
 
 
 """
