@@ -1,35 +1,27 @@
-def itself(*args, **kwargs):
-    out = list(args)
-    out += [v for v in kwargs.values()]
-    return out
-
-
 class Continue:
 
     def __init__(self, *args, **kwargs):
-        self.out = itself(*args, **kwargs)
-
-    def __iter__(self):
-        return iter(self.out)
+        self.args = args
+        self.kwargs = kwargs
 
 
 class Unset:
     pass
 
 
-def recursive(res=Unset()):
-    def itself_set(*args, **kwargs):
-        return itself(res, *args, **kwargs)
+def recursive(res=Unset):
+    def set_res(*args, **kwargs):
+        return Continue(res, *args, **kwargs)
 
-    def itself_unset(*args, **kwargs):
-        return itself(*args, **kwargs)
+    def unset_res(*args, **kwargs):
+        return Continue(*args, **kwargs)
 
     def inner(itself_fn):
         def wrapper(fn):
             def calc(*args, **kwargs):
-                inp = itself_fn(*args, **kwargs)
+                inp: Continue = itself_fn(*args, **kwargs)
                 while True:
-                    out = fn(*inp)
+                    out = fn(*inp.args, **inp.kwargs)
                     if isinstance(out, Continue):
                         inp = out
                     else:
@@ -39,7 +31,7 @@ def recursive(res=Unset()):
 
         return wrapper
 
-    return inner(itself_unset) if isinstance(res, Unset) else inner(itself_set)
+    return inner(unset_res) if res == Unset else inner(set_res)
 
 
 """
