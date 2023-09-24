@@ -1,9 +1,9 @@
-<h1> Python Recursion Package </h1>
+<h1><a href="https://github.com/codeparameter/recursion">Python Recursion Package</a></h1>
 
 <h3> install: <h3>
 
 <pre><code>
-pip install recursion
+pip install -i https://test.pypi.org/simple/ recursion
 </code></pre>
 
 <h3> doc: <h3>
