@@ -108,4 +108,3 @@ def buildTree(content: [str]):
 Like we discussed, calling the function multiple time just before returning anything means this library is useless.
 This example is even worse. we even didn't use res at all!
 </p>
-

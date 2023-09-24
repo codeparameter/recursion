@@ -1,8 +1,8 @@
-LICENSE
-Licence
+LICENSE.md
 README.md
 pyproject.toml
 recursion.py
+setup.py
 recursion.egg-info/PKG-INFO
 recursion.egg-info/SOURCES.txt
 recursion.egg-info/dependency_links.txt
