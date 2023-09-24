@@ -2,12 +2,16 @@
 
 <h3> install: <h3>
 
+<pre><code>
+
 pip install recursion
+
+</code></pre>
 
 <h3> doc: <h3>
 
 
-Use case:
+<h5>Use case:</h5>
 
 <pre>
 <code>
@@ -26,7 +30,7 @@ print(factorial(5))
 </code>
 </pre>
 
-Bad use case 1:
+<h5>Bad use case 1:</h5>
 
 <pre>
 <code>
@@ -45,15 +49,15 @@ print(bad_use_case(3, 5, 6))
 </code>
 </pre>
 
+<p>
+The reason fo that is that actually this library is not necessary in these situations.
+To know how we can use this library, follow this single step: 
+"Instead of returning the function, use Continue like the factorial example."
+Whenever you use calling the function multiple time just before returning anything,
+you don't need this library(unless there is somewhere else in the function that returns only itself).
+</p>
 
- The reason fo that is that actually this library is not necessary in these situations.
- To know how we can use this library, follow this single step: 
- "Instead of returning the function, use Continue like the factorial example."
- Whenever you use calling the function multiple time just before returning anything,
- you don't need this library(unless there is somewhere else in the function that returns only itself).
-
-
- Bad use case 2:
+<h5>Bad use case 2:</h5>
 
 <pre>
 <code>
@@ -114,6 +118,8 @@ def buildTree(content: [str]):
 </code>
 </pre>
 
+<p>
 Like we discussed, calling the function multiple time just before returning anything means this library is useless.
-This example is even worse. we even didn't use res at all!  
+This example is even worse. we even didn't use res at all!
+</p>
 
