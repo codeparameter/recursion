@@ -9,6 +9,7 @@ pip install recursion
 
 Use case:
 
+<pre>
 <code>
 
 @recursive(1)
@@ -23,9 +24,11 @@ print(factorial(4))
 print(factorial(5))
 
 </code>
+</pre>
 
 Bad use case 1:
 
+<pre>
 <code>
 
 @recursive(1)
@@ -40,6 +43,7 @@ print(bad_use_case(6, 9, 3))
 print(bad_use_case(3, 5, 6))
 
 </code>
+</pre>
 
 
  The reason fo that is that actually this library is not necessary in these situations.
@@ -51,6 +55,7 @@ print(bad_use_case(3, 5, 6))
 
  Bad use case 2:
 
+<pre>
 <code>
 
 class Node:
@@ -107,6 +112,7 @@ def buildTree(content: [str]):
     return buildTree_rec(nodes)
 
 </code>
+</pre>
 
 Like we discussed, calling the function multiple time just before returning anything means this library is useless.
 This example is even worse. we even didn't use res at all!  
