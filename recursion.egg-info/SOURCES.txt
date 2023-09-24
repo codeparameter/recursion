@@ -1,3 +1,6 @@
+LICENSE
+Licence
+README.md
 pyproject.toml
 recursion.py
 recursion.egg-info/PKG-INFO
