@@ -84,8 +84,8 @@ print(bad_use_case(3, 5, 6))
 
 # To know how we can use this library, remember these:
 # 1. Instead of returning the function, use Continue like the factorial example.
-# 2. Whenever you use calling the function multiple time just before returning anything, you mabe be able
-#    to set parallel flag True. If parallel would corupted your calculations, then in these sitiations
+# 2. Whenever you use calling the function multiple time just before returning anything, you maybe be able
+#    to set parallel flag True. If parallel would corrupted your calculations, then in these situations
 #    you don't need to use this library at all
 
 
