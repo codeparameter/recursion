@@ -1,3 +1,6 @@
+from concurrent.futures import ThreadPoolExecutor
+
+
 class Continue:
 
     def __init__(self, *args, **kwargs):
@@ -9,16 +12,16 @@ class Unset:
     pass
 
 
-def recursive(res=Unset):
+def recursive(res=Unset, parallel=False, join=False):
     def set_res(*args, **kwargs):
         return Continue(res, *args, **kwargs)
 
     def unset_res(*args, **kwargs):
         return Continue(*args, **kwargs)
 
-    def inner(itself_fn):
-        def wrapper(fn):
-            def calc(*args, **kwargs):
+    def wrapper(itself_fn):
+        def calc(fn):
+            def inner_calc(*args, **kwargs):
                 inp: Continue = itself_fn(*args, **kwargs)
                 while True:
                     out = fn(*inp.args, **inp.kwargs)
@@ -27,17 +30,33 @@ def recursive(res=Unset):
                     else:
                         return out
 
-            return calc
+            return inner_calc
 
-        return wrapper
+        return calc
 
-    return inner(unset_res) if res == Unset else inner(set_res)
+    def single_thread(itself_fn):
+        return wrapper(itself_fn)
+
+    def multi_thread(itself_fn):
+        if join:
+            class Result:
+                item = None
+
+            with ThreadPoolExecutor() as executor:
+                Result.item = executor.submit(wrapper, itself_fn).result()
+            return Result.item
+        else:
+            return ThreadPoolExecutor().submit(wrapper, itself_fn).result()
+
+    itself = unset_res if res == Unset else set_res
+
+    return multi_thread(itself) if parallel else single_thread(itself)
 
 
 """
 # Use case:
 
-@recursive(1)
+@recursive(res=1)
 def factorial(res, n):
     if n == 1:
         return res
@@ -49,9 +68,9 @@ print(factorial(4))
 print(factorial(5))
 
 
-# Bad use case 1:
+# Use case 1:
 
-@recursive(1)
+@recursive(res=1, parallel=True)
 def bad_use_case(res, a, b, n):
     if n == 1:
         return res
@@ -63,14 +82,14 @@ print(bad_use_case(6, 9, 3))
 print(bad_use_case(3, 5, 6))
 
 
-# The reason fo that is that actually this library is not necessary in these situations.
-# To know how we can use this library, follow this single step: 
-# "Instead of returning the function, use Continue like the factorial example."
-# Whenever you use calling the function multiple time just before returning anything,
-# you don't need this library(unless there is somewhere else in the function that returns only itself).
+# To know how we can use this library, remember these:
+# 1. Instead of returning the function, use Continue like the factorial example.
+# 2. Whenever you use calling the function multiple time just before returning anything, you mabe be able
+#    to set parallel flag True. If parallel would corupted your calculations, then in these sitiations
+#    you don't need to use this library at all
 
 
-# Bad use case 2:
+# Use case 2:
 
 # A merkle tree implementation
 import hashlib
@@ -104,7 +123,7 @@ class MerkleTree:
     def getRoot(self):
         return self.root
 
-    @recursive()
+    @recursive(parallel=True)
     def buildTree(self, content: [Node]) -> Node:
         if len(content) % 2 == 1:
             content.append(content[-1].copy())
@@ -134,9 +153,4 @@ content = input().split(" ")
 tree = MerkleTree(content)
 tree.print()
 print(tree.getRoot().hash)
-
-
-
-# Like we discussed, calling the function multiple time just before returning anything means this library is useless.
-
 """
